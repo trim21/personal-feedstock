@@ -1,0 +1,53 @@
+name: renovate ci pr
+
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - synchronize
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.head_ref }}"
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync-sha:
+    if: startsWith(github.head_ref, 'renovatebot/')
+    runs-on: "ubuntu-24.04"
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version-file: "pyproject.toml"
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          activate-environment: true
+
+      - run: uv sync --locked
+
+      - run: python scripts/update.py --sync-sha
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: ci/${{ github.event.pull_request.head.ref }}
+          title: "build: ${{ github.event.pull_request.title }}"
+          body: |
+            sha256 synced from ${{ github.event.pull_request.html_url }}
+
+            close ${{ github.event.pull_request.html_url }} after merge
+          token: "${{ github.token }}"
+          base: "master"
+          commit-message: "build: sync sha256 for ${{ github.event.pull_request.title }}"

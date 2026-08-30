@@ -1,0 +1,46 @@
+name: tests
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - .github/renovate.json
+      - .pre-commit-config.yaml
+      - readme.md
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  conda:
+    uses: ./.github/workflows/_build_conda.yaml
+
+  lint:
+    needs:
+      - conda
+    runs-on: "ubuntu-24.04"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version-file: "pyproject.toml"
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          activate-environment: true
+
+      - run: uv sync --locked
+
+      - run: python scripts/render.py
+      - run: dprint fmt
+      - run: git diff --exit-code
+
+  pass:
+    needs:
+      - lint
+      - conda
+    runs-on: "ubuntu-24.04"
+    steps:
+      - run: "echo success"

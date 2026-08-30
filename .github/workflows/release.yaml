@@ -1,0 +1,50 @@
+name: release
+
+on:
+  push:
+    branches:
+      - "master"
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  # sleep some time before we build packages.
+  # channel may still be processing newly uploaded package
+  # give them some time,
+  # so rattler-build can see packages in repodata.json
+  sleep:
+    runs-on: "ubuntu-24.04"
+    steps:
+      - run: sleep 60
+
+  conda:
+    needs: sleep
+    uses: ./.github/workflows/_build_conda.yaml
+
+  upload-conda:
+    name: Upload packages to Conda
+    needs: [conda]
+    permissions:
+      id-token: write
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          pattern: conda-*
+          path: dist
+          merge-multiple: true
+
+      - name: Install rattler-build
+        uses: jaxxstorm/action-install-gh-release@v2.1.0
+        with:
+          repo: prefix-dev/rattler-build
+          tag: v0.55.1
+        env:
+          GITHUB_TOKEN: "${{ github.token }}"
+
+      - run: |
+          find ./dist/ -type f -name '*.conda' -print0 | xargs -r0 rattler-build upload prefix -c trim21

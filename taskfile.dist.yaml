@@ -1,0 +1,16 @@
+version: 3
+
+tasks:
+  render:
+    cmds:
+      - cmd: python scripts/render.py
+      - cmd: dprint fmt
+
+  build:
+    cmd: |
+      rattler-build build \
+        --wrap-log-lines=false \
+        --log-style=plain \
+        --channel=conda-forge \
+        --channel=https://repo.prefix.dev/trim21 \
+        --recipe-dir=packages

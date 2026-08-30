@@ -1,0 +1,18 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>trim21/renovate-config",
+    "github>trim21/renovate-config:python",
+    "github>trim21/renovate-config:app"
+  ],
+  "customManagers": [
+    {
+      "customType": "jsonata",
+      "managerFilePatterns": ["packages/*/recipe.yaml"],
+      "fileFormat": "yaml",
+      "matchStrings": ["[{'currentValue': context.version, 'packageName': 'MetaCubeX/mihomo'}]"],
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "v{{version}}"
+    }
+  ]
+}

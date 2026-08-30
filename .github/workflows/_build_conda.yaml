@@ -1,0 +1,39 @@
+name: build conda packages
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    name: Build conda
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install rattler-build
+        uses: jaxxstorm/action-install-gh-release@v2.1.0
+        with:
+          repo: prefix-dev/rattler-build
+          tag: v0.55.1
+        env:
+          GITHUB_TOKEN: "${{ github.token }}"
+
+      - run: |
+          rattler-build build \
+            --wrap-log-lines=false \
+            --log-style=plain \
+            --skip-existing=all \
+            --channel=conda-forge \
+            --channel=https://repo.prefix.dev/trim21 \
+            --output-dir=./output \
+            --verbose \
+            --recipe-dir=packages
+        shell: bash
+
+      - run: ls ./output/
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: "conda-linux-64"
+          path: ./output/linux-64/*.conda
+          if-no-files-found: ignore
