@@ -35,7 +35,7 @@ jobs:
             | cut -d/ -f2 | sort -u)
           echo "packages=$pkgs" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version-file: "pyproject.toml"
       - name: Install the latest version of uv
