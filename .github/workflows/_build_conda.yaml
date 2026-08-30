@@ -32,7 +32,7 @@ jobs:
 
       - run: ls ./output/
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: "conda-linux-64"
           path: ./output/linux-64/*.conda
