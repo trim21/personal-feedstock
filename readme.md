@@ -4,7 +4,7 @@ release some packages to conda ecosystem
 
 you can find packages at this channel:
 
-- <https://prefix.dev/channels/trim21>
+- <https://prefix.dev/channels/trim21-pkg>
 
 ## packages
 
