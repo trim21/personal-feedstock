@@ -23,7 +23,7 @@ jobs:
     if: startsWith(github.head_ref, 'renovatebot/')
     runs-on: "ubuntu-24.04"
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
@@ -35,7 +35,7 @@ jobs:
             | cut -d/ -f2 | sort -u)
           echo "packages=$pkgs" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/setup-python@v7
+      - uses: actions/setup-python@v7.0.0
         with:
           python-version-file: "pyproject.toml"
       - name: Install the latest version of uv
@@ -50,7 +50,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v8
+        uses: peter-evans/create-pull-request@v8.1.1
         with:
           branch: ci/${{ github.event.pull_request.head.ref }}
           title: "build: ${{ github.event.pull_request.title }}"
