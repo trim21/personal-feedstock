@@ -8,7 +8,7 @@ jobs:
     name: Build conda
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install rattler-build
         uses: jaxxstorm/action-install-gh-release@v3.0.0
