@@ -12,5 +12,5 @@ tasks:
         --wrap-log-lines=false \
         --log-style=plain \
         --channel=conda-forge \
-        --channel=https://repo.prefix.dev/trim21-pkg \
+        --channel=https://prefix.dev/trim21-pkgs \
         --recipe-dir=packages

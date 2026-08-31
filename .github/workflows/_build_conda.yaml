@@ -24,7 +24,7 @@ jobs:
             --log-style=plain \
             --skip-existing=all \
             --channel=conda-forge \
-            --channel=https://repo.prefix.dev/trim21-pkg \
+            --channel=https://prefix.dev/trim21-pkgs \
             --output-dir=./output \
             --verbose \
             --recipe-dir=packages
