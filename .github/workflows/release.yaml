@@ -15,7 +15,7 @@ jobs:
   # give them some time,
   # so rattler-build can see packages in repodata.json
   sleep:
-    runs-on: "ubuntu-24.04"
+    runs-on: "ubuntu-slim"
     steps:
       - run: sleep 60
 
