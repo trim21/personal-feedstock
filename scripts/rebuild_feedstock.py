@@ -165,7 +165,18 @@ def open_rebuild_pr(name: str, version: str) -> None:
         raise SystemExit(
             f"failed to create pull request: {response.status_code} {response.text}"
         )
-    print(f"pull request created: {response.json()['html_url']}")
+    pr = response.json()
+    print(f"pull request created: {pr['html_url']}")
+
+    labels = client.post(
+        f"{GITHUB_API}/repos/{upstream_slug}/issues/{pr['number']}/labels",
+        headers=github_headers(),
+        json={"labels": ["automerge"]},
+    )
+    if labels.is_error:
+        raise SystemExit(
+            f"failed to label pull request: {labels.status_code} {labels.text}"
+        )
 
 
 @click.command()
