@@ -1,0 +1,31 @@
+name: rebuild feedstock
+
+on:
+  schedule:
+    - cron: "30 21 * * *" # 05:30 Asia/Shanghai
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: rebuild-feedstock
+  cancel-in-progress: false
+
+jobs:
+  golangci-lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version-file: "pyproject.toml"
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          activate-environment: true
+
+      - run: uv sync --locked
+
+      - run: python scripts/rebuild_feedstock.py golangci-lint
+        env:
+          GITHUB_TOKEN: ${{ secrets.FEEDSTOCK_TOKEN }}
