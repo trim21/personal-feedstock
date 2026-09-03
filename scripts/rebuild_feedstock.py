@@ -33,21 +33,40 @@ def pinned_version(name: str) -> str:
     return version
 
 
-def local_update_pr_open(repo_slug: str, path: str) -> bool:
+def version_key(version: str) -> tuple[int, ...]:
+    return tuple(int(part) for part in version.split("."))
+
+
+def repo_slug() -> str:
+    return os.environ.get("GITHUB_REPOSITORY", "trim21/personal-feedstock")
+
+
+def candidate_version(name: str) -> str:
+    """newest pinned version, preferring the version from open local update prs."""
+    watch_path = f"watch/{name}/pixi.toml"
+    versions = [pinned_version(name)]
+
     prs = client.get(
-        f"{GITHUB_API}/repos/{repo_slug}/pulls",
+        f"{GITHUB_API}/repos/{repo_slug()}/pulls",
         params={"state": "open", "per_page": "100"},
         headers=github_headers(),
     ).json()
     for pr in prs:
         files = client.get(
-            f"{GITHUB_API}/repos/{repo_slug}/pulls/{pr['number']}/files",
+            f"{GITHUB_API}/repos/{repo_slug()}/pulls/{pr['number']}/files",
             headers=github_headers(),
         ).json()
-        if any(file["filename"] == path for file in files):
-            print(f"local update pr {pr['html_url']} is open, skip")
-            return True
-    return False
+        for file in files:
+            if file["filename"] != watch_path or not file.get("patch"):
+                continue
+            m = re.search(r'^\+go-nocgo = "==([^"]+)"', file["patch"], re.MULTILINE)
+            if m:
+                print(
+                    f"open update pr {pr['html_url']} bumps {DEPENDENCY} to {m.group(1)}"
+                )
+                versions.append(m.group(1))
+
+    return max(versions, key=version_key)
 
 
 def upstream_pr_exists(upstream_slug: str, head: str) -> bool:
@@ -152,14 +171,9 @@ def open_rebuild_pr(name: str, version: str) -> None:
 @click.command()
 @click.argument("name")
 def main(name: str) -> None:
-    repo_slug = os.environ.get("GITHUB_REPOSITORY", "trim21/personal-feedstock")
-    watch_path = f"watch/{name}/pixi.toml"
+    version = candidate_version(name)
+    print(f"{name}: target {DEPENDENCY} {version}")
 
-    version = pinned_version(name)
-    print(f"{name}: pinned {DEPENDENCY} {version}")
-
-    if local_update_pr_open(repo_slug, watch_path):
-        return
     if upstream_pr_exists(
         f"{UPSTREAM_OWNER}/{name}-feedstock",
         f"{FORK_OWNER}:rebuild/{DEPENDENCY}-{version}",
