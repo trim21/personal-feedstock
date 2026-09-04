@@ -4,4 +4,4 @@ channels = ["conda-forge"]
 platforms = ["linux-64"]
 
 [dependencies]
-go-nocgo = "==1.26.7"
+go-nocgo = "==1.27.1"
