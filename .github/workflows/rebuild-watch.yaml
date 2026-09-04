@@ -15,9 +15,9 @@ jobs:
   golangci-lint:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
 
-      - uses: actions/setup-python@v7
+      - uses: actions/setup-python@v7.0.0
         with:
           python-version-file: "pyproject.toml"
       - uses: astral-sh/setup-uv@v10.0.1
