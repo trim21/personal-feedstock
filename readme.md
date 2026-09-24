@@ -10,4 +10,4 @@ you can find packages at this channel:
 
 | package | version | build |
 | :-----: | :-----: | :---: |
-| mihomo  | 1.19.30 |   0   |
+| mihomo  | 1.19.30 |   1   |

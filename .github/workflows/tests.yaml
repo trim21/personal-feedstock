@@ -6,7 +6,6 @@ on:
       - master
     paths-ignore:
       - .github/renovate.json
-      - .pre-commit-config.yaml
       - readme.md
 
 concurrency:
@@ -41,6 +40,6 @@ jobs:
     needs:
       - lint
       - conda
-    runs-on: "ubuntu-24.04"
+    runs-on: "ubuntu-slim"
     steps:
       - run: "echo success"

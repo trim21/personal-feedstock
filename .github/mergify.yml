@@ -25,7 +25,7 @@ pull_request_rules:
           - label=automerge
       - not:
           and:
-            - "head*=renovate/lockfile-maintenance-"
+            - "head*=renovate/lockfile-maintenance-*"
             - "created-at>24h ago"
       - check-success=pass
     actions:

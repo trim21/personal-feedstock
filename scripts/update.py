@@ -60,10 +60,12 @@ def upgrade(recipe_content: str, recipe: dict[str, Any], slug: str) -> str:
     url = f"https://github.com/{slug}/archive/refs/tags/{tag}.tar.gz"
     sha256 = fetch_tarball_sha256(url)
 
-    if version == jmespath.search("context.version", recipe):
-        if sha256 == jmespath.search("source.sha256", recipe):
-            print(f"up to date at {version}")
-            return recipe_content
+    current_version = jmespath.search("context.version", recipe)
+    current_sha256 = jmespath.search("source.sha256", recipe)
+
+    if version == current_version and sha256 == current_sha256:
+        print(f"up to date at {version}")
+        return recipe_content
 
     print(f"update to {version}")
 
@@ -107,7 +109,7 @@ def update_object_patch(old_content: str, new_value: str, object_path: str) -> s
     recipe = yaml.safe_load(old_content)
     current_value = jmespath.search(object_path, recipe)
     if not isinstance(current_value, str):
-        raise ValueError(
+        raise TypeError(
             f"expecting to update str, got {current_value!r} instead: {object_path=!r}"
         )
 
@@ -123,7 +125,7 @@ def update_object_patch(old_content: str, new_value: str, object_path: str) -> s
         if jmespath.search(object_path, yaml.safe_load(new_content)) == new_value:
             return new_content
 
-    raise Exception("failed to update content")
+    raise RuntimeError("failed to update content")
 
 
 if __name__ == "__main__":
