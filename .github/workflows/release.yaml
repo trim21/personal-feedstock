@@ -46,6 +46,8 @@ jobs:
         env:
           GITHUB_TOKEN: "${{ github.token }}"
 
+      - run: "find ./dist/ -type f -name '*.conda' -print0 | xargs -r0 echo"
+
       - run: |
           find ./dist/ -type f -name '*.conda' -print0 | xargs -r0 rattler-build upload prefix -c trim21-pkgs
 
