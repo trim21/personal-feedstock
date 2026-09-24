@@ -51,10 +51,10 @@ jobs:
       - run: |
           find ./dist/ -type f -name '*.conda' -print0 | xargs -r0 rattler-build upload prefix -c trim21-pkgs
 
-      # mirror to anaconda.org channel trim21; must not block the release
+      # mirror to anaconda.org channel trim21-pkgs; must not block the release
       - name: Mirror packages to Anaconda.org
         continue-on-error: true
         env:
           ANACONDA_API_KEY: "${{ secrets.ANACONDA_API_KEY }}"
         run: |
-          find ./dist/ -type f -name '*.conda' -print0 | xargs -r0 rattler-build upload anaconda --owner trim21 --force
+          find ./dist/ -type f -name '*.conda' -print0 | xargs -r0 rattler-build upload anaconda --owner trim21-pkgs
