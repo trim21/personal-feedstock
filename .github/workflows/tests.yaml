@@ -33,6 +33,7 @@ jobs:
       - run: uv sync --locked
 
       - run: python scripts/render.py
+      - run: dprint fmt
       - run: git diff --exit-code
       - uses: trim21/actions/prek@master
 
