@@ -10,11 +10,18 @@
   "customManagers": [
     {
       "customType": "jsonata",
-      "managerFilePatterns": ["packages/*/recipe.yaml"],
+      "managerFilePatterns": ["packages/mihomo/recipe.yaml"],
       "fileFormat": "yaml",
       "matchStrings": ["[{'currentValue': context.version, 'packageName': 'MetaCubeX/mihomo'}]"],
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "v{{version}}"
+    },
+    {
+      "customType": "jsonata",
+      "managerFilePatterns": ["packages/lfs-s3/recipe.yaml"],
+      "fileFormat": "yaml",
+      "matchStrings": ["[{'currentValue': context.version, 'packageName': 'nicolas-graves/lfs-s3'}]"],
+      "datasourceTemplate": "github-releases"
     }
   ]
 }

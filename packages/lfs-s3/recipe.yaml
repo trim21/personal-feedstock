@@ -1,0 +1,42 @@
+schema_version: 1
+
+context:
+  version: "0.2.2"
+
+package:
+  name: lfs-s3
+  version: ${{ version }}
+
+source:
+  url: https://github.com/nicolas-graves/lfs-s3/archive/refs/tags/${{ version }}.tar.gz
+  sha256: 66ed8e78661b82dc3ef75ecbc90485f42ee48e6b4858b6b767a5ccf939580664
+
+build:
+  number: 0
+  script:
+    - CGO_ENABLED=0 go build -trimpath -ldflags="-s -w -buildid=" -o "${PREFIX}/bin/lfs-s3"
+
+requirements:
+  build:
+    - ${{ compiler("go-nocgo") }}
+
+tests:
+  - script:
+      - echo '{"event":"init"}' | lfs-s3 --bucket=test --endpoint=http://127.0.0.1:9000 --compression=none > out.json
+      - grep -qxF '{}' out.json
+
+about:
+  homepage: https://github.com/nicolas-graves/lfs-s3
+  repository: https://github.com/nicolas-graves/lfs-s3
+  summary: Git LFS custom transfer agent which stores large files in S3
+  description: |
+    lfs-s3 is a Git LFS custom transfer agent that uploads LFS objects to an
+    S3-compatible bucket instead of an LFS server. It supports optional zstd,
+    gzip or no compression, skips redundant uploads using S3 checksums, and
+    works with path-style endpoints and GCS-compatible providers.
+  license: MIT
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - trim21
