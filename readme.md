@@ -10,4 +10,5 @@ you can find packages at this channel:
 
 | package | version | build |
 | :-----: | :-----: | :---: |
+| lfs-s3  |  0.2.2  |   0   |
 | mihomo  | 1.19.30 |   2   |
