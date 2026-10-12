@@ -26,16 +26,16 @@ wheels = [
 
 [[package]]
 name = "dprint-py"
-version = "0.62.0.0"
+version = "0.63.0.0"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/4b/3a/365ec486f6e7405cc1db57df4545ec82d98bcd55a2c29d6057259d8d4ed3/dprint_py-0.62.0.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:9c5a64d574b49dbf381f17500344dd27f3ad739f1b22bffdc4ee5909170312e3", size = 30502066, upload-time = "2026-10-11T00:55:51.073Z" },
-    { url = "https://files.pythonhosted.org/packages/32/66/4fa1bc29084e8e574651f3036d875dbf6d4c378429c1d5ea54a7bada6289/dprint_py-0.62.0.0-py3-none-macosx_11_0_x86_64.whl", hash = "sha256:b95f5481b635b6b6d052cbf00ec0e3c5c519d5f2ba803256399206fd1e887672", size = 34413479, upload-time = "2026-10-11T00:55:54.316Z" },
-    { url = "https://files.pythonhosted.org/packages/e1/6d/eab1a49576111240010f169500524ae8c58a2286f8091b5f2fa321303b71/dprint_py-0.62.0.0-py3-none-manylinux_2_17_aarch64.whl", hash = "sha256:3f14c62677f87e307b436425bdf093cad2279f7127eeb53423c4823d6e53793a", size = 22031655, upload-time = "2026-10-11T00:55:57.051Z" },
-    { url = "https://files.pythonhosted.org/packages/72/3e/c1569eb3fb89c14b998fe1573e944155b731fd4f783458d34a449c5dc069/dprint_py-0.62.0.0-py3-none-manylinux_2_17_x86_64.musllinux_1_1_x86_64.whl", hash = "sha256:429dfae3ba4db80f5796932da0979ad4f68cdc59912de54bbde95c5587a35536", size = 37298577, upload-time = "2026-10-11T00:56:00.156Z" },
-    { url = "https://files.pythonhosted.org/packages/5d/81/0040f1afe26badc7aa58426c3ecf0dd1a7c8ce3a235ae3b78560ad90ad5a/dprint_py-0.62.0.0-py3-none-manylinux_2_17_x86_64.whl", hash = "sha256:c10d8e5226bbcd08cc8dd38aa0dfc006cf003d1c53f97a8b36a6c1e6ebd66cfd", size = 27252686, upload-time = "2026-10-11T00:56:03.05Z" },
-    { url = "https://files.pythonhosted.org/packages/3e/64/0a42bf839548f473375f1e97b515282ec8aa868334a50cd5597842e112b3/dprint_py-0.62.0.0-py3-none-win_amd64.whl", hash = "sha256:dde0aaa5098423e1e6d6b682c3930109d4b223f6251bdf1e1458de16975de912", size = 30357141, upload-time = "2026-10-11T00:56:05.658Z" },
-    { url = "https://files.pythonhosted.org/packages/04/23/2def8b60ce314dd99bfc0a3dce88eae662fa59004ab9ee4acb0e2ac0dd23/dprint_py-0.62.0.0-py3-none-win_arm64.whl", hash = "sha256:19b636e72849272711641d6ebf54449f3954ac77f821577eed0f4ca7b174364c", size = 23450261, upload-time = "2026-10-11T00:56:08.548Z" },
+    { url = "https://files.pythonhosted.org/packages/53/2d/f148f791c7e01f627db7c853cfd9b8318ad36152a50d16822f0636447c7d/dprint_py-0.63.0.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:0e08e01a3da2d1b7afa77a235a1420a3cca31d6ad9c80a727314011d8f248dca", size = 29839618, upload-time = "2026-10-12T02:10:39.038Z" },
+    { url = "https://files.pythonhosted.org/packages/4e/6e/574a4b6888eb0af02f40a864fb7d6fe527f83182030361d355dad131701d/dprint_py-0.63.0.0-py3-none-macosx_11_0_x86_64.whl", hash = "sha256:aa755d0ad7167ee1efeec4fb1d5c4d5aad6145170bba055f117259706868aa3e", size = 33681519, upload-time = "2026-10-12T02:10:43.294Z" },
+    { url = "https://files.pythonhosted.org/packages/b9/2b/ee62f3f40217751cdddbd011d1f3aba3e7698441e36f19a02691193a3f07/dprint_py-0.63.0.0-py3-none-manylinux_2_17_aarch64.whl", hash = "sha256:13c30ff93240167500b6cc03e161cea452a5e31203e49c8d6ae30f7b2cc72a85", size = 22067671, upload-time = "2026-10-12T02:10:47.516Z" },
+    { url = "https://files.pythonhosted.org/packages/f6/d4/e164fdf3d56fc0d2c27228c187f0b3431375daa1e56bb311743c7fe100da/dprint_py-0.63.0.0-py3-none-manylinux_2_17_x86_64.musllinux_1_1_x86_64.whl", hash = "sha256:ff4473ca724bdb5b579551a24cc24fdc0472ef4da1e95af7814d1becd07b85ac", size = 37245129, upload-time = "2026-10-12T02:10:52.024Z" },
+    { url = "https://files.pythonhosted.org/packages/cd/a3/dccaec2ccd6a83bfcc8eed38c95bc6a3f90cefc8405f7f57ddc890103485/dprint_py-0.63.0.0-py3-none-manylinux_2_17_x86_64.whl", hash = "sha256:3eda2ccf052cd4a27fa3aa106fe850801076a5e9730387712002158c3f9dd224", size = 27248142, upload-time = "2026-10-12T02:10:55.899Z" },
+    { url = "https://files.pythonhosted.org/packages/5a/e5/7871579805813a5d70be4bf736e52bc1a0bc6e8048a94a1461ad4eb49c62/dprint_py-0.63.0.0-py3-none-win_amd64.whl", hash = "sha256:624714f8feb584a9bba60ec75e324978e479e884ca03052956025294e46cb657", size = 29886101, upload-time = "2026-10-12T02:10:59.562Z" },
+    { url = "https://files.pythonhosted.org/packages/ce/ca/88a28f1097f5280c2539eb428240990a60fc3a0dd7501abe77f928f08772/dprint_py-0.63.0.0-py3-none-win_arm64.whl", hash = "sha256:d6f21dc82e91d9b67c78d61559826d6a4de8f96e88c98b8f41b2bb1464011572", size = 22938261, upload-time = "2026-10-12T02:11:03.263Z" },
 ]
 
 [[package]]
@@ -118,7 +118,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "click", specifier = "==8.5.0" },
-    { name = "dprint-py", specifier = "==0.62.0.0" },
+    { name = "dprint-py", specifier = "==0.63.0.0" },
     { name = "httpx2", specifier = "==2.13.1" },
     { name = "jmespath", specifier = "==1.1.0" },
     { name = "pyyaml", specifier = "==6.0.3" },
