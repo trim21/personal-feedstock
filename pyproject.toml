@@ -7,7 +7,7 @@ name = "personal-feedstock"
 version = "0.1.0"
 description = "Add your description here"
 readme = "readme.md"
-requires-python = "==3.15.0"
+requires-python = "==3.15.1"
 dependencies = [
   "click==8.5.0",
   "click==8.5.0",
