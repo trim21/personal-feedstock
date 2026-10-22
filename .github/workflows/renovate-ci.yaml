@@ -54,7 +54,7 @@ jobs:
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: echo "name=ci-renovatebot-${HEAD_REF#renovate/}" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/setup-python@v7.0.0
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version-file: "pyproject.toml"
 
