@@ -7,6 +7,7 @@ on:
     types:
       - opened
       - synchronize
+      - reopened
     paths:
       - packages/*/recipe.yaml
 
@@ -20,44 +21,71 @@ permissions:
 
 jobs:
   sync-sha:
-    if: startsWith(github.head_ref, 'renovatebot/')
+    if: startsWith(github.head_ref, 'renovate/') && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: "ubuntu-26.04"
     steps:
       - uses: actions/checkout@v7.0.1
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.base.ref }}
           fetch-depth: 0
+
+      # create-pull-request only rebases the workflow changes onto the base when the
+      # checkout is not already on the base, which would drop the renovate commit.
+      # moving the local base branch onto the renovate branch keeps the whole diff.
+      - name: Take over the renovate commit
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          git fetch --no-tags origin "$HEAD_REF"
+          git reset --hard FETCH_HEAD
 
       - name: Find changed packages
         id: changed
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
         run: |
-          pkgs=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD" -- 'packages/*/recipe.yaml' \
+          pkgs=$(git diff --name-only "origin/$BASE_REF...HEAD" -- 'packages/*/recipe.yaml' \
             | cut -d/ -f2 | sort -u)
           echo "packages=$pkgs" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/setup-python@v7.0.0
+      - name: Derive pull request branch
+        id: branch
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: echo "name=ci-renovatebot-${HEAD_REF#renovate/}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-python@v7.1.0
         with:
           python-version-file: "pyproject.toml"
+
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v10.3.0
+        uses: astral-sh/setup-uv@v10.3.2
         with:
           activate-environment: true
 
       - run: uv sync --locked
 
-      - run: python scripts/update.py --sync-sha ${{ steps.changed.outputs.packages }}
+      - name: Sync sha256
+        run: python scripts/update.py --sync-sha ${{ steps.changed.outputs.packages }}
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.FEEDSTOCK_TOKEN }}
+
+      - run: python scripts/render.py
+      - run: dprint fmt
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8.1.1
         with:
-          branch: ci/${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.FEEDSTOCK_TOKEN }}
+          branch: ${{ steps.branch.outputs.name }}
+          base: ${{ github.event.pull_request.base.ref }}
+          delete-branch: true
           title: "build: ${{ github.event.pull_request.title }}"
+          commit-message: "build: sync sha256 and readme for ${{ github.event.pull_request.title }}"
+          labels: |
+            dependencies
+            ci:auto-merge
           body: |
-            sha256 synced from ${{ github.event.pull_request.html_url }}
+            Derived from ${{ github.event.pull_request.html_url }}, with source sha256 and readme synced.
 
-            close ${{ github.event.pull_request.html_url }} after merge
-          token: "${{ github.token }}"
-          base: "master"
-          commit-message: "build: sync sha256 for ${{ github.event.pull_request.title }}"
+            Merge this pull request, then close the renovate one.

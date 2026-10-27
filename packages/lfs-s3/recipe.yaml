@@ -1,7 +1,7 @@
 schema_version: 1
 
 context:
-  version: "0.2.2"
+  version: "0.3.0"
 
 package:
   name: lfs-s3
@@ -9,7 +9,7 @@ package:
 
 source:
   url: https://github.com/nicolas-graves/lfs-s3/archive/refs/tags/${{ version }}.tar.gz
-  sha256: 66ed8e78661b82dc3ef75ecbc90485f42ee48e6b4858b6b767a5ccf939580664
+  sha256: 644d458c1d98bf419c010addeeddb1fb8b99f16d7ade18618f601d63f49294d4
 
 build:
   number: 0

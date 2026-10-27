@@ -13,8 +13,7 @@
       "managerFilePatterns": ["packages/mihomo/recipe.yaml"],
       "fileFormat": "yaml",
       "matchStrings": ["[{'currentValue': context.version, 'packageName': 'MetaCubeX/mihomo'}]"],
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "v{{version}}"
+      "datasourceTemplate": "github-releases"
     },
     {
       "customType": "jsonata",
