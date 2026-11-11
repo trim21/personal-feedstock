@@ -1,7 +1,7 @@
 schema_version: 1
 
 context:
-  version: "1.19.33"
+  version: "1.19.34"
 
 package:
   name: mihomo
@@ -9,7 +9,7 @@ package:
 
 source:
   url: https://github.com/MetaCubeX/mihomo/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: e7c596b37ff27ec487d19b1920f73e0c97a78067ea35766530ee9659ade72711
+  sha256: e3284a44f1052f1c454c90d418faa244516c2470bf232b455ea18fc4f5fa6028
 
 build:
   number: 2
