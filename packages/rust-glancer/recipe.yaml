@@ -14,8 +14,11 @@ source:
 build:
   number: 0
   script:
-    - cargo build --locked --profile dist --package rust-glancer
-    - install -Dm755 target/dist/rust-glancer "${PREFIX}/bin/rust-glancer"
+    # conda's gcc activation already exports CFLAGS, and cargo's [env] in
+    # .cargo/config.toml only fills unset variables, so keep the mimalloc define here
+    - export CFLAGS="${CFLAGS:-} -DMI_NO_ALIGNED_HINT=1" CXXFLAGS="${CXXFLAGS:-} -DMI_NO_ALIGNED_HINT=1"
+    - cargo build --locked --profile dist --package rust-glancer --target-dir "${SRC_DIR}/target"
+    - install -Dm755 "${SRC_DIR}/target/dist/rust-glancer" "${PREFIX}/bin/rust-glancer"
 
 requirements:
   build:
