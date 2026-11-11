@@ -1,0 +1,48 @@
+schema_version: 1
+
+context:
+  version: "0.4.0"
+
+package:
+  name: rust-glancer
+  version: ${{ version }}
+
+source:
+  url: https://github.com/rust-glancer/rust-glancer/archive/refs/tags/v${{ version }}.tar.gz
+  sha256: 14ce54a8f45a4d183ab52916623162af60efc58edd39e4bef848607179b3d4b9
+
+build:
+  number: 0
+  script:
+    - cargo build --locked --profile dist --package rust-glancer
+    - install -Dm755 target/dist/rust-glancer "${PREFIX}/bin/rust-glancer"
+
+requirements:
+  build:
+    - ${{ compiler("c") }}
+    - ${{ compiler("rust") }}
+
+tests:
+  - script:
+      - rust-glancer --version
+      - if: unix
+        then: rust-glancer --version | grep -F "${{ version }}"
+      - rust-glancer --help
+
+about:
+  homepage: https://github.com/rust-glancer/rust-glancer
+  repository: https://github.com/rust-glancer/rust-glancer
+  summary: Lightweight Rust LSP optimized for low memory usage
+  description: |
+    rust-glancer is an incomplete-by-design Rust language server with a focus on
+    low memory usage. It indexes Rust crates and workspaces incrementally and
+    serves the LSP protocol over stdio or TCP, so it can back editors such as
+    VS Code and Zed.
+  license: MIT OR Apache-2.0
+  license_file:
+    - LICENSE-MIT
+    - LICENSE-APACHE
+
+extra:
+  recipe-maintainers:
+    - trim21
