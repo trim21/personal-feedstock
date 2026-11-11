@@ -17,8 +17,10 @@ build:
     # conda's gcc activation already exports CFLAGS, and cargo's [env] in
     # .cargo/config.toml only fills unset variables, so keep the mimalloc define here
     - export CFLAGS="${CFLAGS:-} -DMI_NO_ALIGNED_HINT=1" CXXFLAGS="${CXXFLAGS:-} -DMI_NO_ALIGNED_HINT=1"
-    - cargo build --locked --profile dist --package rust-glancer --target-dir "${SRC_DIR}/target"
-    - install -Dm755 "${SRC_DIR}/target/dist/rust-glancer" "${PREFIX}/bin/rust-glancer"
+    # rust_linux-64 activation exports CARGO_BUILD_TARGET, so artifacts land in
+    # target/<triple>/<profile> instead of target/<profile>
+    - cargo build --locked --profile dist --package rust-glancer --target "${CARGO_BUILD_TARGET}"
+    - install -Dm755 "${SRC_DIR}/target/${CARGO_BUILD_TARGET}/dist/rust-glancer" "${PREFIX}/bin/rust-glancer"
 
 requirements:
   build:
