@@ -21,6 +21,13 @@
       "fileFormat": "yaml",
       "matchStrings": ["[{'currentValue': context.version, 'packageName': 'nicolas-graves/lfs-s3'}]"],
       "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "jsonata",
+      "managerFilePatterns": ["packages/rust-glancer/recipe.yaml"],
+      "fileFormat": "yaml",
+      "matchStrings": ["[{'currentValue': context.version, 'packageName': 'rust-glancer/rust-glancer'}]"],
+      "datasourceTemplate": "github-releases"
     }
   ]
 }
