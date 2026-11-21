@@ -14,7 +14,7 @@ dependencies = [
   "dprint-py==0.65.0.0",
   "httpx2==2.16.2",
   "jmespath==1.1.0",
-  "pyyaml==6.0.3",
+  "pyyaml==6.0.4",
 ]
 
 [tool.flit.module]
