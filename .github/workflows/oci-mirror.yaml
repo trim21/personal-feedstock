@@ -27,8 +27,15 @@ jobs:
 
       # trim21 fork of channel-mirrors/conda-oci-mirror, branch channel-urls:
       # allow a full channel URL (prefix.dev) as the mirror source; the
-      # upstream CLI only supports anaconda.org channels
-      - run: uv tool install "git+https://github.com/trim21/conda-oci-mirror.git@67063ae53da59ff60c11fc4bed873b6d5e318912"
+      # upstream CLI only supports anaconda.org channels. Tracked by branch
+      # so fork fixes land without a pin bump here.
+      - run: uv tool install "git+https://github.com/trim21/conda-oci-mirror.git@channel-urls"
+
+      # the channel may still be publishing when release finishes; give
+      # prefix.dev time to settle before reading repodata and shards
+      - name: wait for channel to settle
+        if: github.event_name == 'workflow_run'
+        run: sleep 60
 
       - name: mirror to ghcr
         env:
