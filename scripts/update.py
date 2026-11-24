@@ -31,13 +31,17 @@ def repo_slug(repository: str) -> str:
 
 
 def fetch_tarball_sha256(url: str) -> str:
-    return hashlib.sha256(client.get(url, headers=github_headers()).content).hexdigest()
+    response = client.get(url, headers=github_headers())
+    response.raise_for_status()
+    return hashlib.sha256(response.content).hexdigest()
 
 
 def latest_release(slug: str) -> tuple[str, str]:
-    release = client.get(
+    response = client.get(
         f"{GITHUB_API}/repos/{slug}/releases/latest", headers=github_headers()
-    ).json()
+    )
+    response.raise_for_status()
+    release: dict[str, Any] = response.json()
     tag: str = release["tag_name"]
     return tag, tag.removeprefix("v")
 
