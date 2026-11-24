@@ -9,7 +9,7 @@ package:
 
 source:
   url: https://github.com/prometheus/prometheus/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: 9294e72722fe8f90e54994ce36f331ea6176cb0edc4149cbf1d023bc89536505
+  sha256: 2709a3bd43f9d15e0cecfc33ab473d011e2a69ab29265b91398cc1b8561403c0
 
 build:
   number: 0
