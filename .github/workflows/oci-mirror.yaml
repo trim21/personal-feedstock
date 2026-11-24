@@ -37,7 +37,7 @@ jobs:
         run: >
           conda-oci mirror
           --channel https://repo.prefix.dev/trim21-pkgs
-          --registry ghcr.io/trim21/pkgs
+          --registry ghcr.io/trim21/personal-feedstock
           --subdir linux-64
           --subdir noarch
           --cache-dir "${RUNNER_TEMP}/conda-oci-mirror"
