@@ -48,3 +48,17 @@ jobs:
           --subdir linux-64
           --subdir noarch
           --cache-dir "${RUNNER_TEMP}/conda-oci-mirror"
+
+      # packages pushed by the mirror start private; visibility changes need
+      # a classic PAT with write:packages, which github.token cannot provide
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: make new ghcr packages public
+        env:
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
+        run: |
+          if [ -z "$GITHUB_TOKEN" ]; then
+            echo "GHCR_PAT secret not set; new packages stay private"
+            exit 0
+          fi
+          uv run scripts/ghcr_public.py
