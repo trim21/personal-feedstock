@@ -12,4 +12,4 @@ you can find packages at this channel:
 | :----------: | :-----: | :---: |
 |    lfs-s3    |  0.3.0  |   0   |
 |    mihomo    | 1.19.34 |   2   |
-| rust-glancer |  0.4.0  |   0   |
+| rust-glancer |  0.5.0  |   0   |

@@ -9,7 +9,7 @@ package:
 
 source:
   url: https://github.com/rust-glancer/rust-glancer/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: 14ce54a8f45a4d183ab52916623162af60efc58edd39e4bef848607179b3d4b9
+  sha256: 579eaa3b3ef8f9b06158c41018f0f284450cb29732afa408dcd43b3d263b31a2
 
 build:
   number: 0
