@@ -1,0 +1,43 @@
+name: oci-mirror
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 18 * * *"
+  workflow_run:
+    workflows:
+      - release
+    types:
+      - completed
+
+concurrency:
+  group: "${{ github.workflow }}"
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: astral-sh/setup-uv@v10.4.0
+
+      # trim21 fork of channel-mirrors/conda-oci-mirror, branch channel-urls:
+      # allow a full channel URL (prefix.dev) as the mirror source; the
+      # upstream CLI only supports anaconda.org channels
+      - run: uv tool install "git+https://github.com/trim21/conda-oci-mirror.git@38a8d1691120444cffb17c8da756e16557bf5645"
+
+      - name: mirror to ghcr
+        env:
+          ORAS_USER: trim21
+          ORAS_PASS: "${{ github.token }}"
+        run: >
+          conda-oci mirror
+          --channel https://repo.prefix.dev/trim21-pkgs
+          --registry ghcr.io/trim21/personal-feedstock
+          --subdir linux-64
+          --subdir noarch
+          --cache-dir "${RUNNER_TEMP}/conda-oci-mirror"
