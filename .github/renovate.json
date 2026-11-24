@@ -13,7 +13,8 @@
       "managerFilePatterns": ["packages/mihomo/recipe.yaml"],
       "fileFormat": "yaml",
       "matchStrings": ["[{'currentValue': context.version, 'packageName': 'MetaCubeX/mihomo'}]"],
-      "datasourceTemplate": "github-releases"
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$"
     },
     {
       "customType": "jsonata",
@@ -27,7 +28,8 @@
       "managerFilePatterns": ["packages/rust-glancer/recipe.yaml"],
       "fileFormat": "yaml",
       "matchStrings": ["[{'currentValue': context.version, 'packageName': 'rust-glancer/rust-glancer'}]"],
-      "datasourceTemplate": "github-releases"
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.+)$"
     }
   ]
 }
