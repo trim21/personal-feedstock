@@ -13,4 +13,4 @@ you can find packages at this channel:
 |    lfs-s3    |  0.3.0  |   0   |
 |    mihomo    | 1.19.34 |   2   |
 |   promtool   | 3.16.0  |   0   |
-| rust-glancer |  0.5.1  |   0   |
+| rust-glancer |  0.5.2  |   0   |
