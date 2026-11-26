@@ -1,7 +1,7 @@
 schema_version: 1
 
 context:
-  version: "0.5.1"
+  version: "0.5.2"
 
 package:
   name: rust-glancer
@@ -9,7 +9,7 @@ package:
 
 source:
   url: https://github.com/rust-glancer/rust-glancer/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: 1a7c3e1cde14ce511054aabe0ea4c49a3ef43b6202553d30f54b079dda2247e0
+  sha256: f54bfc2b7777edf80cdf363c9f40051419192a58b73a079adfaed34f313c7eec
 
 build:
   number: 0
