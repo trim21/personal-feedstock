@@ -13,6 +13,12 @@ package:
 # them (packages/conda/conda.ts of the xclang repository): the archive holds
 # every target, the host's clang and lld being the ones PGO and ThinLTO were
 # built from.
+#
+# Building that archive here instead needs eight runtimes units, and the
+# macOS one is built on macOS only (toolchain/runtimes.ts); toolchain/
+# package.ts then refuses anything short of all eight. Upstream's release
+# pipeline runs that across Linux and macOS runners, and builds twice for
+# PGO: about three hours.
 source:
   - if: target_platform == "linux-64"
     then:
