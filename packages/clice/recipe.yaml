@@ -1,0 +1,80 @@
+schema_version: 1
+
+context:
+  version: "1.0.0"
+  # Renovate tracks this repo's releases (.github/renovate.json)
+  github_repo: clice-io/clice
+
+package:
+  name: clice
+  version: ${{ version }}
+
+source:
+  # A git checkout, not the archive tarball: the build stamps the version
+  # with `git describe`, which needs the tag and the history behind it.
+  git: https://github.com/clice-io/clice
+  tag: v${{ version }}
+
+build:
+  number: 0
+  # Bazel needs bash on Windows, and a short output root that a build script
+  # cannot set up; the Windows binaries are cross-built on Linux upstream.
+  skip:
+    - win
+  script:
+    # The version is `git describe`'s, which a source copy cannot answer the
+    # way upstream's build did: the release commit also carries the nightly
+    # tag applied after it, and the copy has no git index to call the tree
+    # clean. The package is that release's build, so stamp its version.
+    - |
+        cat > stamp.sh <<'EOF'
+        #!/bin/sh
+        node bazel/workspace_status.mjs | sed 's/^STABLE_CLICE_VERSION .*/STABLE_CLICE_VERSION ${{ version }}/'
+        EOF
+    # version.cpp reads the stable status file, which stamps only a stamped
+    # build writes; the toolchain and libclang come from xclang's release.
+    # The output root is outside the checkout: Bazel refuses a repo contents
+    # cache inside the main repo, and HOME is the work directory here.
+    - npx --yes @bazel/bazelisk@1.28.1 --output_user_root="${PWD}/../bazel" build --stamp --workspace_status_command="sh stamp.sh" //:package
+    # //:package is the release archive, clice/{bin/clice,lib/clang,clice.toml,LICENSE};
+    # clice finds lib/clang from its own bin/ (clang::GetResourcesPath), so the
+    # same layout works in $PREFIX.
+    - mkdir -p "${PREFIX}/lib" "${PREFIX}/share/clice" "${PREFIX}/share/licenses/clice"
+    - tar -xzf build/RelWithDebInfo/bin/clice.tar.gz -C "${PREFIX}" --strip-components=1 clice/bin clice/lib
+    - install -m644 docs/clice.toml "${PREFIX}/share/clice/clice.toml"
+    - install -m644 LICENSE "${PREFIX}/share/licenses/clice/LICENSE"
+
+requirements:
+  build:
+    - git
+    - nodejs >=24
+
+tests:
+  - script:
+      - clice --version
+      - clice --help
+      - if: unix
+        then:
+          - clice --version | grep -F "clice version ${{ version }}"
+          # the resource directory clice reads clang's headers from
+          - test -n "$(ls -A "${PREFIX}/lib/clang")"
+          - test -f "${PREFIX}/share/clice/clice.toml"
+
+about:
+  homepage: https://clice.io
+  repository: https://github.com/clice-io/clice
+  documentation: https://docs.clice.io/clice/
+  summary: A C/C++ language server and command line toolkit built on LLVM/Clang
+  description: |
+    clice is a C/C++ language server written in modern C++, built on
+    LLVM/Clang. It compiles in a pool of worker processes, supports C++20
+    named modules with an on-disk cache, and works out of the box from a
+    compile_commands.json. The same engine answers from the command line for
+    indexing, linting, formatting, querying the persisted index and
+    rewriting sources.
+  license: Apache-2.0
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - trim21
