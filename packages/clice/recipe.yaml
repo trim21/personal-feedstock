@@ -22,11 +22,20 @@ build:
   skip:
     - win
   script:
+    # The version is `git describe`'s, which a source copy cannot answer the
+    # way upstream's build did: the release commit also carries the nightly
+    # tag applied after it, and the copy has no git index to call the tree
+    # clean. The package is that release's build, so stamp its version.
+    - |
+        cat > stamp.sh <<'EOF'
+        #!/bin/sh
+        node bazel/workspace_status.mjs | sed 's/^STABLE_CLICE_VERSION .*/STABLE_CLICE_VERSION ${{ version }}/'
+        EOF
     # version.cpp reads the stable status file, which stamps only a stamped
     # build writes; the toolchain and libclang come from xclang's release.
     # The output root is outside the checkout: Bazel refuses a repo contents
     # cache inside the main repo, and HOME is the work directory here.
-    - npx --yes @bazel/bazelisk@1.28.1 --output_user_root="${PWD}/../bazel" build --stamp //:package
+    - npx --yes @bazel/bazelisk@1.28.1 --output_user_root="${PWD}/../bazel" build --stamp --workspace_status_command="sh stamp.sh" //:package
     # //:package is the release archive, clice/{bin/clice,lib/clang,clice.toml,LICENSE};
     # clice finds lib/clang from its own bin/ (clang::GetResourcesPath), so the
     # same layout works in $PREFIX.
@@ -46,7 +55,7 @@ tests:
       - clice --help
       - if: unix
         then:
-          - clice --version | grep -F "${{ version }}"
+          - clice --version | grep -F "clice version ${{ version }}"
           # the resource directory clice reads clang's headers from
           - test -n "$(ls -A "${PREFIX}/lib/clang")"
           - test -f "${PREFIX}/share/clice/clice.toml"
