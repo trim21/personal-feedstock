@@ -1,0 +1,85 @@
+schema_version: 1
+
+context:
+  version: "23.1.5.3"
+  # Renovate tracks this repo's releases (.github/renovate.json)
+  github_repo: clice-io/xclang
+
+package:
+  name: xclang
+  version: ${{ version }}
+
+# One toolchain archive per host, as clice-io's own conda channel packages
+# them (packages/conda/conda.ts of the xclang repository): the archive holds
+# every target, the host's clang and lld being the ones PGO and ThinLTO were
+# built from.
+source:
+  - if: target_platform == "linux-64"
+    then:
+      - url: https://github.com/clice-io/xclang/releases/download/${{ version }}/xclang-${{ version }}-x86_64-unknown-linux-gnu.tar.xz
+        sha256: 1b33d50eb4a21a77ba4fdf761a1793a749b6baee2c3d9e5bdfe8e754004938c7
+  - if: target_platform == "linux-aarch64"
+    then:
+      - url: https://github.com/clice-io/xclang/releases/download/${{ version }}/xclang-${{ version }}-aarch64-unknown-linux-gnu.tar.xz
+        sha256: e9e8aa1a700a3e5be99f4085469395dcc3a155735dbc9bc7493c095ebf6c8cb3
+  - if: target_platform == "osx-64"
+    then:
+      - url: https://github.com/clice-io/xclang/releases/download/${{ version }}/xclang-${{ version }}-x86_64-apple-darwin.tar.xz
+        sha256: 2db73c3c606a8c677397f4f3afcd1d83b6311e702cb8525ed03ccfcf5949cada
+  - if: target_platform == "osx-arm64"
+    then:
+      - url: https://github.com/clice-io/xclang/releases/download/${{ version }}/xclang-${{ version }}-aarch64-apple-darwin.tar.xz
+        sha256: 3cd5f8619eb74ab462ca9c53a9b97f9bf74982ed48186b4d2baf38cc18934d30
+
+build:
+  number: 0
+  # A Windows package is its own archive and .bat/.ps1 activation scripts.
+  skip:
+    - win
+  script:
+    # Nothing goes to bin/: $PREFIX/opt/xclang keeps conda-forge's clang and
+    # lld the ones a build finds, and the activation scripts put xclang's
+    # ahead in PATH.
+    - mkdir -p "${PREFIX}/opt"
+    - cp -a . "${PREFIX}/opt/xclang"
+    - mkdir -p "${PREFIX}/etc/conda/activate.d" "${PREFIX}/etc/conda/deactivate.d"
+    - cp "${RECIPE_DIR}/activate.sh" "${PREFIX}/etc/conda/activate.d/xclang.sh"
+    - cp "${RECIPE_DIR}/deactivate.sh" "${PREFIX}/etc/conda/deactivate.d/xclang.sh"
+  # The toolchain names no prefix of its own and must not be rewritten: its
+  # binaries resolve their runtimes and sysroots around themselves.
+  dynamic_linking:
+    binary_relocation: false
+    overlinking_behavior: ignore
+    overdepending_behavior: ignore
+  prefix_detection:
+    ignore: true
+
+tests:
+  - script:
+      - if: unix
+        then:
+          - clang --version
+          - clang++ --version
+          # libc++, libc++abi, libunwind and compiler-rt come with it: the
+          # program needs nothing but the system's glibc.
+          - echo 'int main() { return 0; }' > hello.cpp
+          - clang++ hello.cpp -o hello
+          - ./hello
+
+about:
+  homepage: https://github.com/clice-io/xclang
+  repository: https://github.com/clice-io/xclang
+  documentation: https://docs.clice.io/xclang
+  summary: A self-contained clang toolchain for eight targets, PGO and ThinLTO optimized
+  description: |
+    xclang is a clang toolchain that cross-compiles C and C++ for Linux,
+    Windows and macOS with one --target flag, from every host. libc++,
+    libc++abi, libunwind and compiler-rt are linked in, and each target's
+    sysroot and runtimes come with the toolchain, so a program built with it
+    needs nothing but the operating system.
+  license: Apache-2.0 WITH LLVM-exception AND LGPL-2.1-or-later AND GPL-2.0-only WITH Linux-syscall-note AND MPL-2.0 AND ZPL-2.1 AND MIT AND Zlib AND BSD-3-Clause
+  license_file: ${{ PREFIX }}/opt/xclang/share/licenses/
+
+extra:
+  recipe-maintainers:
+    - trim21
