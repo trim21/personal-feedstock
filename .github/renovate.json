@@ -10,34 +10,13 @@
   "customManagers": [
     {
       "customType": "jsonata",
-      "managerFilePatterns": ["packages/mihomo/recipe.yaml"],
+      "managerFilePatterns": ["packages/*/recipe.yaml"],
       "fileFormat": "yaml",
-      "matchStrings": ["[{'currentValue': context.version, 'packageName': 'MetaCubeX/mihomo'}]"],
+      "matchStrings": [
+        "$exists(context.github_repo) ? {\"packageName\": context.github_repo, \"currentValue\": context.version} : []"
+      ],
       "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+)$"
-    },
-    {
-      "customType": "jsonata",
-      "managerFilePatterns": ["packages/lfs-s3/recipe.yaml"],
-      "fileFormat": "yaml",
-      "matchStrings": ["[{'currentValue': context.version, 'packageName': 'nicolas-graves/lfs-s3'}]"],
-      "datasourceTemplate": "github-releases"
-    },
-    {
-      "customType": "jsonata",
-      "managerFilePatterns": ["packages/promtool/recipe.yaml"],
-      "fileFormat": "yaml",
-      "matchStrings": ["[{'currentValue': context.version, 'packageName': 'prometheus/prometheus'}]"],
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+)$"
-    },
-    {
-      "customType": "jsonata",
-      "managerFilePatterns": ["packages/rust-glancer/recipe.yaml"],
-      "fileFormat": "yaml",
-      "matchStrings": ["[{'currentValue': context.version, 'packageName': 'rust-glancer/rust-glancer'}]"],
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+)$"
+      "extractVersionTemplate": "^(?:v)?(?<version>.+)$"
     }
   ]
 }
