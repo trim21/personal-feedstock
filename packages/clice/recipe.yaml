@@ -10,8 +10,10 @@ package:
   version: ${{ version }}
 
 source:
-  url: https://github.com/clice-io/clice/archive/refs/tags/v${{ version }}.tar.gz
-  sha256: 376f3a368020a67e85475f5ec4630ac2e144a9db188c03b07f3c6d8198e4fcf7
+  # A git checkout, not the archive tarball: the build stamps the version
+  # with `git describe`, which needs the tag and the history behind it.
+  git: https://github.com/clice-io/clice
+  tag: v${{ version }}
 
 build:
   number: 0
@@ -20,14 +22,11 @@ build:
   skip:
     - win
   script:
-    # A source tarball has no git history, so the stamp falls back to
-    # BASE_VERSION; keep that the recipe's version instead of upstream's.
-    # (`-i.bak` is the one form both GNU sed and macOS's accept.)
-    - sed -i.bak 's/^const BASE_VERSION = .*/const BASE_VERSION = "${{ version }}";/' bazel/workspace_status.mjs
-    - rm bazel/workspace_status.mjs.bak
     # version.cpp reads the stable status file, which stamps only a stamped
     # build writes; the toolchain and libclang come from xclang's release.
-    - npx --yes @bazel/bazelisk@1.28.1 build --stamp //:package
+    # The output root is outside the checkout: Bazel refuses a repo contents
+    # cache inside the main repo, and HOME is the work directory here.
+    - npx --yes @bazel/bazelisk@1.28.1 --output_user_root="${PWD}/../bazel" build --stamp //:package
     # //:package is the release archive, clice/{bin/clice,lib/clang,clice.toml,LICENSE};
     # clice finds lib/clang from its own bin/ (clang::GetResourcesPath), so the
     # same layout works in $PREFIX.
@@ -38,6 +37,7 @@ build:
 
 requirements:
   build:
+    - git
     - nodejs >=24
 
 tests:
