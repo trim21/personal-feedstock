@@ -2,6 +2,8 @@ schema_version: 1
 
 context:
   version: "0.3.0"
+  # Renovate tracks this repo's releases (.github/renovate.json)
+  github_repo: nicolas-graves/lfs-s3
 
 package:
   name: lfs-s3

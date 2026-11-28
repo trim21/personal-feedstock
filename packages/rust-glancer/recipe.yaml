@@ -2,6 +2,8 @@ schema_version: 1
 
 context:
   version: "0.5.2"
+  # Renovate tracks this repo's releases (.github/renovate.json)
+  github_repo: rust-glancer/rust-glancer
 
 package:
   name: rust-glancer

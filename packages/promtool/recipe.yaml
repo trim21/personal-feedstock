@@ -2,6 +2,8 @@ schema_version: 1
 
 context:
   version: "3.16.0"
+  # Renovate tracks this repo's releases (.github/renovate.json)
+  github_repo: prometheus/prometheus
 
 package:
   name: promtool

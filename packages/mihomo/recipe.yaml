@@ -2,6 +2,8 @@ schema_version: 1
 
 context:
   version: "1.19.34"
+  # Renovate tracks this repo's releases (.github/renovate.json)
+  github_repo: MetaCubeX/mihomo
 
 package:
   name: mihomo
